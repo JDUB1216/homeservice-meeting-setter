@@ -1,0 +1,24 @@
+# Build artifacts
+/bin/
+build/
+
+# Runtime data (queues, send log, security events, state)
+/data/queue.json
+/data/sent.json
+/data/security.jsonl
+/data/replies.json
+/data/local-state.json
+/data/*.runtime.json
+
+# asfdk security event log fallback location
+asfdk-security.jsonl
+
+# Editor / OS
+.idea/
+.vscode/
+.DS_Store
+
+# Secrets
+*.env
+.env
+!*.example.env
