@@ -4,7 +4,7 @@ A Google ADK-Go agent that researches home-service prospects, generates highly s
 
 ## Status
 
-**Alpha — skeleton in place, engine not yet implemented.** See [Handoff](HANDOFF.md) for what's done and what's missing.
+**Alpha — skeleton complete, engine implemented, tests passing.** See [Handoff](HANDOFF.md) for full history.
 
 ## What it does
 
@@ -12,6 +12,8 @@ A Google ADK-Go agent that researches home-service prospects, generates highly s
 2. **Generate** — Builds a personalized subject/body from those observations (deterministic templates, no LLM). Rejects anything below a specificity bar.
 3. **Guard** — Runs every email through ASFDK (prompt defense + output validation). Blocks or flags are logged to a security event log.
 4. **Queue** — Holds emails in a file-backed approval queue. The first 50 approved emails are individually gated; after that the queue flips to monitoring mode (auto-approve, still logged).
+5. **Send** — Delivers approved emails via MockSender (demo) or SMTPSender (production). Every attempt is recorded in the sent log.
+6. **Reply** — Lightweight triage of inbound replies (positive / neutral / negative / out-of-office) with auto-drafted booking responses for positive replies.
 
 ## Project layout
 
@@ -20,13 +22,13 @@ A Google ADK-Go agent that researches home-service prospects, generates highly s
 ├── go.mod
 ├── Makefile               # build, run, demo, test, vet, fmt, tidy, clean
 ├── .gitignore
-├── cmd/agent/             # (empty) runner main.go not yet written
+├── cmd/agent/             # runner main.go — demo / status / process <path>
 ├── data/                  # runtime data (queue.json, sent.json, security.jsonl, ...)
 └── internal/
     ├── agent/             # ADK agent wiring; runPipeline drives the happy path
     ├── asfdk/             # ASFDK Guard wrapper (sanitization, validation, security log)
     ├── email/             # email.Generator — deterministic template-based generation
-    ├── engine/            # (empty) — the missing package; see Handoff
+    ├── engine/            # composition root — wires research → generate → guard → queue
     ├── model/             # Prospect, GeneratedEmail, ApprovalItem, Observation, etc.
     ├── prospect/          # loader.go (JSON/CSV) + research.go (ExtractObservations)
     ├── queue/             # file-backed approval queue, ApprovalThreshold=50
@@ -52,6 +54,14 @@ The agent reads a `process <path>` command (path = JSON or CSV prospect file), r
 - `email.Generator` — composes emails from observations; `Generate(p, obs) (GeneratedEmail, bool)`
 - `asfdk.Guard` — single seam into ASFDK; `NewGuard(userID, logPath)`
 - `queue.Queue` — file-backed queue; `Open(path)` → `Enqueue(email)`, `Approve/Reject/Edit(id)`
+- `sender.Sender` — transport interface; `MockSender` (demo) or `SMTPSender` (production)
+- `reply.Classify` — keyword-based reply classifier; `reply.DraftResponse` — booking reply draft
+
+## Testing
+
+```
+make test    # 28 tests across 4 packages (email, engine, prospect, queue)
+```
 
 ## Dependencies
 
