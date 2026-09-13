@@ -115,7 +115,7 @@ func runPipeline(inv agent.InvocationContext, eng *engine.Engine) iter.Seq2[*ses
 			}
 			step(inv, yield, "summary", "processed %d/%d, %d rejected", processed, len(prospects), failed)
 		case line == "status" || strings.HasPrefix(line, "status "):
-			step(inv, yield, "status", eng.StatusSummary())
+			step(inv, yield, "status", "%s", eng.StatusSummary())
 		case line == "":
 			step(inv, yield, "info", "no command given — try: process data/prospects.json")
 		default:
