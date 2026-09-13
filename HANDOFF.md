@@ -65,6 +65,27 @@ agent.go actual imports (verified): `google.golang.org/adk/agent`, `google.golan
 
 ---
 
+## Vulnerability fixes (branch: `fix/vulnerabilities`)
+
+Addressed all govulncheck findings. On branch `fix/vulnerabilities`, PR #3.
+
+**Upgrades applied:**
+| Module | Before | After |
+|---|---|---|
+| `golang.org/x/crypto` | v0.51.0 | v0.57.0 |
+| `golang.org/x/net` | v0.55.0 | v0.59.0 |
+| `golang.org/x/sys` | v0.45.0 | v0.48.0 |
+| `golang.org/x/text` | v0.39.0 | v0.42.0 |
+| `go.opentelemetry.io/otel` | v1.43.0 | v1.46.0 (+ trace, metric) |
+| `github.com/go-logr/logr` | v1.4.3 | v1.4.4 |
+| `go` directive | 1.25.0 | 1.26.0 |
+
+**Result:** `go test ./...` passes, `go build ./...` passes, `govulncheck` reports 0 vulnerabilities in packages imported by the module.
+
+**Remaining 1 item:** `golang.org/x/crypto/openpgp` is declared unmaintained, unsafe by design. Our code does not import `openpgp` (`go mod why` confirms). Design deprecation, not a patchable bug.
+
+---
+
 ## Remaining item (optional, not blocking)
 
 ### GitHub organization ownership
