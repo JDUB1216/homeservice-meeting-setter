@@ -128,7 +128,7 @@ func (g *Generator) subject(p model.Prospect, picked []model.Observation) string
 	case "missing_service":
 		return fmt.Sprintf("A small gap on %s's Google listing", p.BusinessName)
 	case "no_website":
-		return fmt.Sprintf("Your Google profile has no website link")
+		return "Your Google profile has no website link"
 	case "no_videos":
 		return fmt.Sprintf("Noticed %s has no videos on Google", p.BusinessName)
 	default:
