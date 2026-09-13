@@ -60,7 +60,7 @@ The agent reads a `process <path>` command (path = JSON or CSV prospect file), r
 ## Testing
 
 ```
-make test    # 28 tests across 4 packages (email, engine, prospect, queue)
+make test    # 33 tests across 4 packages (email, engine, prospect, queue)
 ```
 
 ## Dependencies
